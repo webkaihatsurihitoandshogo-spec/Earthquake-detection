@@ -24,6 +24,7 @@
                 document.getElementById('display').innerText = 
                     `発表: ${API.AnnouncedTime || '不明'}\n` +
                     `場所: ${API.Hypocenter || '情報なし'}\n` +
+                    `マグニチュード: ${API.Magunitude || '不明'}\n` +
                     `震度: ${API.Intensity || '不明'}`;
 
             } catch (e) {
