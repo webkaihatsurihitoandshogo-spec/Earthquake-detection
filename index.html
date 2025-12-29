@@ -1,3 +1,42 @@
-<html>
-  <title>地震情報</title>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>地震情報</title>
+</head>
+<body>
+    <h1>地震情報（最新）</h1>
+    <div id="display">データを読み込み中...</div>
+
+    <script>
+        // api.py の代わりに JavaScript が直接 API を叩きに行きます
+        const api_url = "api.wolfx.jp";
+
+        async function getEEW() {
+            try {
+                const response = await fetch(api_url);
+                if (!response.ok) throw new Error('ネットワークエラー');
+                
+                const data = await response.json();
+                
+                // 変数 API に保存（前のコードと同じ使い方ができます）
+                const API = data;
+                console.log("取得したデータ:", API);
+
+                // 画面に表示する例
+                document.getElementById('display').innerText = 
+                    `発表時刻: ${API.AnnouncedTime || '不明'}\n` +
+                    `震源地: ${API.Hypocenter || '情報なし'}\n` +
+                    `最大震度: ${API.Magunitude || '不明'}`;
+
+            } catch (error) {
+                document.getElementById('display').innerText = "エラー: " + error.message;
+            }
+        }
+
+        // 実行
+        getEEW();
+    </script>
+</body>
 </html>
+
