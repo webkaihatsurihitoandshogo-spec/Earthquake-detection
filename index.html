@@ -9,8 +9,8 @@
     <div id="display">データを読み込み中...</div>
 
     <script>
-        // api.py の代わりに JavaScript が直接 API を叩きに行きます
-        const api_url = "api.wolfx.jp";
+        // CORS回避用のプロキシURLを先頭に付けます
+        const api_url = "corsproxy.io?https://api.wolfx.jp/jma_eew.json";
 
         async function getEEW() {
             try {
@@ -19,24 +19,25 @@
                 
                 const data = await response.json();
                 
-                // 変数 API に保存（前のコードと同じ使い方ができます）
+                // 変数 API に保存
                 const API = data;
                 console.log("取得したデータ:", API);
 
-                // 画面に表示する例
+                // 画面に表示
                 document.getElementById('display').innerText = 
                     `発表時刻: ${API.AnnouncedTime || '不明'}\n` +
                     `震源地: ${API.Hypocenter || '情報なし'}\n` +
-                    `最大震度: ${API.Magunitude || '不明'}`;
+                    `マグニチュード: ${API.Magunitude || '不明'}\n` +
+                    `最大震度: ${API.Intensity || '不明'}`;
 
             } catch (error) {
-                document.getElementById('display').innerText = "エラー: " + error.message;
+                document.getElementById('display').innerText = 
+                    "エラーが発生しました。コンソールを確認してください。";
+                console.error("Error details:", error);
             }
         }
 
-        // 実行
         getEEW();
     </script>
 </body>
 </html>
-
