@@ -11,7 +11,7 @@
     <script>
         // 別のプロキシ「AllOrigins」を使用します
         // このプロキシは ?url= を使ってターゲットを指定します
-        const targetUrl = "api.wolfx.jp/jma_eew.json";
+        const targetUrl = "https://api.wolfx.jp/jma_eew.json";
         const proxyUrl = `api.allorigins.win{encodeURIComponent(targetUrl)}`;
 
         async function getEEW() {
