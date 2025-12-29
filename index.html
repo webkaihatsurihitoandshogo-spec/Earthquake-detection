@@ -9,38 +9,32 @@
     <div id="display">データを読み込み中...</div>
 
     <script>
-        // プロキシ経由のURL
-        const api_url = "corsproxy.io?url=https://api.wolfx.jp/jma_eew.json";
+        // 「?」と「https://」がしっかり入っていることを確認してください
+        const api_url = "corsproxy.io";
 
         async function getEEW() {
             try {
-                const response = await fetch(api_url);
-                if (!response.ok) throw new Error(`HTTPエラー: ${response.status}`);
+                // キャッシュを避けるためにランダムな数字を末尾に足す工夫（これもお勧めです）
+                const finalUrl = api_url + "&t=" + new Date().getTime();
+                
+                const response = await fetch(finalUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTPエラー: ${response.status} (URLが間違っているかプロキシの制限です)`);
+                }
                 
                 const data = await response.json();
-                
-                // 変数 API に保存
                 const API = data;
-                console.log("取得成功！データの中身:", API);
-
-                // 画面に表示する処理
-                // Wolfx APIのキー名は「AnnouncedTime」や「Hypocenter」ですが、
-                // データが空の場合を想定して || (または) を使います
-                const time = API.AnnouncedTime || "不明";
-                const place = API.Hypocenter || "情報なし";
-                const mag = API.Magunitude || "不明";
-                const intensity = API.Intensity || "不明";
 
                 document.getElementById('display').innerText = 
-                    `発表時刻: ${time}\n` +
-                    `震源地: ${place}\n` +
-                    `マグニチュード: ${mag}\n` +
-                    `最大震度: ${intensity}`;
+                    `発表時刻: ${API.AnnouncedTime || 'データなし'}\n` +
+                    `震源地: ${API.Hypocenter || '情報なし'}\n` +
+                    `マグニチュード: ${API.Magunitude || '不明'}\n` +
+                    `最大震度: ${API.Intensity || '不明'}`;
 
             } catch (error) {
-                // どこでエラーが起きたか画面にも詳しく出す
-                document.getElementById('display').innerText = "エラー: " + error.message;
-                console.error("詳細なエラー内容:", error);
+                document.getElementById('display').innerHTML = 
+                    `<p style="color:red;">エラー: ${error.message}</p>`;
             }
         }
 
