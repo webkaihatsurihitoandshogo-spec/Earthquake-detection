@@ -1,4 +1,15 @@
 <html>
   <title>地震情報</title>
+  <body>
+    <script>
+      // Flaskから渡された posts データを JavaScriptの変数 API に保存
+      // |tojson を使うことで、Pythonの辞書をJSのオブジェクト形式に変換します
+      const API = {{ posts | tojson }};
+
+      // 動作確認用：ブラウザのコンソールに内容を表示します
+      console.log("取得した地震データ:", API);
+    </script>
+  </body>
 </html>
+
 
