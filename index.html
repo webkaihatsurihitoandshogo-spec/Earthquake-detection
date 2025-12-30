@@ -72,7 +72,21 @@
         getEEW();
 
         // 1500ミリ秒（1.5秒）ごとに実行
-        setInterval(getEEW, 1500;
+        function updateEEW() {
+　　　　　　  fetch(`api.wolfx.jp{Date.now()}`)
+          .then(res => res.json())
+          .then(data => {
+          console.log(data); // 届いているか確認
+          // ここに表示処理
+          setTimeout(updateEEW, 1500); // 成功したら1.5秒後に次を呼ぶ
+          })
+        .catch(err => {
+        console.error(err);
+        setTimeout(updateEEW, 5000); // 失敗したら5秒待って再試行
+　　　  });
+　　}
+　　updateEEW();
+
     </script>
 </body>
 </html>
