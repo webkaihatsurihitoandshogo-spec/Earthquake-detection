@@ -21,11 +21,41 @@
                 
                 const API = await response.json();
                 
-                document.getElementById('display').innerText = 
-                    `発表: ${API.AnnouncedTime || '不明'}\n` +
-                    `場所: ${API.Hypocenter || '情報なし'}\n` +
-                    `マグニチュード: ${API.Magunitude || '不明'}\n` +
-                    `震度: ${API.Intensity || '不明'}`;
+                // --- 判定用の関数 ---
+
+　　　　　　　　　　// マグニチュードの色を決定する関数
+　　　　　　　　　　function getMagColor(mag) {
+                   const m = parseFloat(mag);
+                   if (isNaN(m)) return "#000000"; // 不明な場合は黒
+　　　　　　　　　　    if (m >= 6.5) return "#982ABC"; // 紫
+                   if (m >= 6.0) return "#FF0000"; // 赤
+　　　　　　　　　　    if (m >= 5.0) return "#FFAB01"; // オレンジ
+　　　　　　　　　　    if (m >= 4.0) return "#FED030"; // 黄色
+                   return "#000000";               // 3.9以下は黒
+　　　　　　　　　　}
+
+　　　　　　　　　// 震度の色を決定する関数
+　　　　　　　　　function getIntColor(intensity) {
+                  if (!intensity) return "#000000";
+                  const s = intensity.toString();
+　　　　　　　　　    if (s.includes('7')) return "#982ABC";           // 紫
+　　　　　　　　　    if (s.includes('6')) return "#FF0000";           // 赤
+　　　　　　　　　    if (s.includes('5')) return "#FFAB01";           // オレンジ
+　　　　　　　　　    if (s.includes('3') || s.includes('4')) return "#FED030"; // 黄色
+                  return "#000000";                                // 0・1・2は黒
+　　　　　　　　　}
+
+　　　　　　　　　// --- 表示処理 ---
+
+　　　　　　　　　const mColor = getMagColor(API.Magunitude);
+　　　　　　　　　const iColor = getIntColor(API.Intensity);
+
+　　　　　　　　　document.getElementById('display').innerHTML = 
+                  `発表: ${API.AnnouncedTime || '不明'}<br>` +
+                  `場所: ${API.Hypocenter || '情報なし'}<br>` +
+　　　　　　　　　    `マグニチュード: <span style="color: ${mColor}; font-weight: bold;">${API.Magunitude || '不明'}</span><br>` +
+　　　　　　　　　    `震度: <span style="color: ${iColor}; font-weight: bold;">${API.Intensity || '不明'}</span>`;
+
 
             } catch (e) {
                 document.getElementById('display').innerText = "取得失敗: " + e.message;
